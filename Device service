@@ -1,0 +1,25 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
+import uuid
+
+app = FastAPI()
+
+class Device(BaseModel):
+    id: str
+    name: str
+    location: str
+    type: str
+
+devices_db = {}
+
+@app.post("/devices/", response_model=Device)
+def register_device(device: Device):
+    if device.id in devices_db:
+        raise HTTPException(status_code=400, detail="Device already registered")
+    devices_db[device.id] = device
+    return device
+
+@app.get("/devices/", response_model=List[Device])
+def list_devices():
+    return list(devices_db.values())
