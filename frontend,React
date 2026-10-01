@@ -1,0 +1,24 @@
+import React, { useEffect, useState } from 'react';
+
+function DeviceDashboard() {
+  const [devices, setDevices] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/devices')
+      .then(res => res.json())
+      .then(setDevices);
+  }, []);
+
+  return (
+    <div>
+      <h1>Registered Devices</h1>
+      <ul>
+        {devices.map(device => (
+          <li key={device.id}>{device.name} - {device.location}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default DeviceDashboard;
